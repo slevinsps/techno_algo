@@ -35,8 +35,7 @@ void insert_borders(Node **head, int left_border, int right_border)
         flag_change = 0;
         //pen = 0;
         if (left_border <= tmp->left_border && right_border >= tmp->right_border) {
-            flag_change = 1;
-            break;
+            return;
         }
         //printf("%d %d %d\n", strlen(tmp->data), strlen(begin), strcmp(tmp->data, begin));
         if (left_border >= tmp->right_border || right_border <= tmp->left_border) {
@@ -55,8 +54,8 @@ void insert_borders(Node **head, int left_border, int right_border)
         }
         if (right_border < tmp->right_border) {
             tmp->right_border = right_border;
-            if (tmp->next && tmp->next->pen > 0)
-                tmp->next->pen--;
+            if (tmp->pen > 0)
+                tmp->pen--;
             flag_change = 1;
         }
 
@@ -100,12 +99,23 @@ int count_list(Node *head)
     {
 
         ans += (2 - count_pen(tmp, head->right_border));
-        //printf("%d %d %d -> ", head->left_border, head->right_border, head->pen);
+        //printf("%d %d %d -> ", head->left_border, head->right_border, count_pen(tmp, head->right_border));
         head = head->next;
 
     }
     //printf("\n");
     return ans;
+}
+
+void free_list(Node *head)
+{
+    Node *tmp = NULL;
+    while(head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
 }
 
 int main(void)
@@ -123,5 +133,6 @@ int main(void)
         insert_borders(&head, left_border, right_border);
     }
     printf("%d",count_list(head));
+    free_list(head);
 
 }
